@@ -31,48 +31,22 @@ void destroy_array() {
 }
 
 //Динамическое выделение новой памяти при нехватке старой.
-void memAlloc() {
+void new_buffer_creation() {
 	capacity = array_size * 2 + 1;
-	int* newBuffer = new int[capacity];
-	memcpy(newBuffer, buffer, sizeof(buffer)*array_size);
+	int* new_buffer = new int[capacity];
+	memcpy(new_buffer, buffer, sizeof(buffer)*array_size);
 	delete[] buffer;
-	buffer = newBuffer;
+	buffer = new_buffer;
 }
 
 //Добавление нового элемента в массив.
 void add_element(const int& element) {
 	if (array_size == capacity) {
-		memAlloc();
+		new_buffer_creation();
 	}
 	buffer[array_size] = element;
 	array_size = array_size + 1;
 }
-
-//Функция удаления
-bool elem_delete(const int& index, bool found, unsigned i)
-{
-		if (array_size * 2 > capacity) {
-			found = true;
-			for (unsigned k = i ; k < array_size - 1; k++) {
-				buffer[k] = buffer[k + 1];
-			}
-		}
-		else if (array_size * 2 == capacity) {
-			found = true;
-			int* newBuffer = new int[array_size - 1];
-			memcpy(newBuffer, buffer, sizeof(int)*i);
-			memcpy(newBuffer + i, buffer + (i + 1), sizeof(int)*(array_size - (i + 1)));
-			delete[] buffer;
-			buffer = newBuffer;
-		}
-		else if (array_size * 2 < capacity) {
-			found = true;
-			memcpy(buffer + i, buffer + (i + 1), sizeof(int)*(array_size - (i + 1)));
-		}
-		array_size = array_size - 1;
-	return found;
-}
-
 
 //Удаление элемента по индексу из массива. 
 //Функция возвращает true, если элемент был удален корректно, иначе - false. 
@@ -82,34 +56,50 @@ bool delete_element_by_index(const unsigned& index)
 	for (unsigned i = 0; i < array_size; i++)
 	{
 		if (i == index) {
-			found = elem_delete(index, found, i);
+			if (array_size * 2 > capacity) {
+				found = true;
+				for (unsigned k = i; k < array_size - 1; k++) {
+					buffer[k] = buffer[k + 1];
+				}
+			}
+			else if (array_size * 2 == capacity) {
+				found = true;
+				int* new_buffer = new int[array_size - 1];
+				memcpy(new_buffer, buffer, sizeof(int)*i);
+				memcpy(new_buffer + i, buffer + (i + 1), sizeof(int)*(array_size - (i + 1)));
+				delete[] buffer;
+				buffer = new_buffer;
+			}
+			else {
+				found = true;
+				memcpy(buffer + i, buffer + (i + 1), sizeof(int)*(array_size - (i + 1)));
+			}
+			array_size = array_size - 1;
 		}
 	}
 	return found;
 }
+
+//Поиск index по element
 int find_index(unsigned element) {
+	unsigned index = -1;
 	for (unsigned i = 0; i < array_size; i++)
 	{
-		if (buffer[i] == element)
-			element = i;
+		if (buffer[i] == element) {
+			index = i;
+		}
 	}
-	return element;
+	return index;
 }
+
 //Удаление элемента из массива. 
 //Функция возвращает true, если элемент был удален корректно, иначе - false. 
 bool delete_element(const int& element)
 {
 	bool found = false; 
-	/*for (unsigned i = 0; i < array_size; i++)
-	{
-		if (buffer[i] == element)
-			found = elem_delete(element, found, i);
-	}*/
 	found = delete_element_by_index(find_index(element));
 	return found;
 }
-
-
 
 //Поиск элемента в массиве.
 //Функция возвращает true, если элемент был найден в массиве, иначе - false. 
