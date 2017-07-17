@@ -49,7 +49,7 @@ void add_element(const int& element) {
 }
 
 //Функция удаления
-bool elem_delete(const int& element, bool found, unsigned i)
+bool elem_delete(const int& index, bool found, unsigned i)
 {
 		if (array_size * 2 > capacity) {
 			found = true;
@@ -74,19 +74,6 @@ bool elem_delete(const int& element, bool found, unsigned i)
 }
 
 
-//Удаление элемента из массива. 
-//Функция возвращает true, если элемент был удален корректно, иначе - false. 
-bool delete_element(const int& element)
-{
-	bool found = false; 
-	for (unsigned i = 0; i < array_size; i++)
-	{
-		if (buffer[i] == element)
-			found = elem_delete(element, found, i);
-	}
-	return found;
-}
-
 //Удаление элемента по индексу из массива. 
 //Функция возвращает true, если элемент был удален корректно, иначе - false. 
 bool delete_element_by_index(const unsigned& index)
@@ -95,17 +82,34 @@ bool delete_element_by_index(const unsigned& index)
 	for (unsigned i = 0; i < array_size; i++)
 	{
 		if (i == index) {
-			found = true;
-			int* newBuffer = new int[array_size - 1];
-			memcpy(newBuffer, buffer, sizeof(buffer) * i);
-			memcpy(newBuffer + i, buffer + (i + 1), sizeof(buffer) * (array_size - (i + 1)));
-			delete[] buffer;
-			buffer = newBuffer;
-			array_size = array_size - 1;
+			found = elem_delete(index, found, i);
 		}
 	}
 	return found;
 }
+int find_index(unsigned element) {
+	for (unsigned i = 0; i < array_size; i++)
+	{
+		if (buffer[i] == element)
+			element = i;
+	}
+	return element;
+}
+//Удаление элемента из массива. 
+//Функция возвращает true, если элемент был удален корректно, иначе - false. 
+bool delete_element(const int& element)
+{
+	bool found = false; 
+	/*for (unsigned i = 0; i < array_size; i++)
+	{
+		if (buffer[i] == element)
+			found = elem_delete(element, found, i);
+	}*/
+	found = delete_element_by_index(find_index(element));
+	return found;
+}
+
+
 
 //Поиск элемента в массиве.
 //Функция возвращает true, если элемент был найден в массиве, иначе - false. 
@@ -333,11 +337,11 @@ int main()
 	can_init_and_destroy_new_array_test();
 	can_add_elements_to_array_test();
 	cannot_delete_not_existed_element_test();
-	//cannot_delete_not_existed_element_test2();
+	cannot_delete_not_existed_element_test2();
 	can_delete_existed_element_test();
-	//can_delete_existed_element_test2();
+	can_delete_existed_element_test2();
 	exception_occurred_when_getiing_element_with_invalid_index_test();
-	//exception_occurred_when_getiing_element_with_invalid_index_test2();
+	exception_occurred_when_getiing_element_with_invalid_index_test2();
 	array_size_has_to_decrease_while_elements_were_deleted_test();
 	can_init_and_destroy_new_array_test();
 
