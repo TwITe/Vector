@@ -31,7 +31,7 @@ void destroy_array() {
 }
 
 //Динамическое выделение новой памяти при нехватке старой.
-void new_buffer_create() {
+void create_new_buffer() {
 	capacity = array_size * 2 + 1;
 	int* new_buffer = new int[capacity];
 	memcpy(new_buffer, buffer, sizeof(buffer)*array_size);
@@ -42,7 +42,7 @@ void new_buffer_create() {
 //Добавление нового элемента в массив.
 void add_element(const int& element) {
 	if (array_size == capacity) {
-		new_buffer_create();
+		create_new_buffer();
 	}
 	buffer[array_size] = element;
 	array_size = array_size + 1;
