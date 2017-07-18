@@ -31,7 +31,7 @@ void destroy_array() {
 }
 
 //Динамическое выделение новой памяти при нехватке старой.
-void new_buffer_creation() {
+void new_buffer_create() {
 	capacity = array_size * 2 + 1;
 	int* new_buffer = new int[capacity];
 	memcpy(new_buffer, buffer, sizeof(buffer)*array_size);
@@ -42,10 +42,22 @@ void new_buffer_creation() {
 //Добавление нового элемента в массив.
 void add_element(const int& element) {
 	if (array_size == capacity) {
-		new_buffer_creation();
+		new_buffer_create();
 	}
 	buffer[array_size] = element;
 	array_size = array_size + 1;
+}
+
+//Поиск index по element
+int find_index(unsigned element) {
+	int index = -1;
+	for (unsigned i = 0; i < array_size; i++)
+	{
+		if (buffer[i] == element) {
+			index = i;
+		}
+	}
+	return index;
 }
 
 //Удаление элемента по индексу из массива. 
@@ -56,14 +68,8 @@ bool delete_element_by_index(const unsigned& index)
 	for (unsigned i = 0; i < array_size; i++)
 	{
 		if (i == index) {
-			if (array_size * 2 > capacity) {
-				found = true;
-				for (unsigned k = i; k < array_size - 1; k++) {
-					buffer[k] = buffer[k + 1];
-				}
-			}
-			else if (array_size * 2 == capacity) {
-				found = true;
+			found = true;
+			if (array_size * 2 == capacity) {
 				int* new_buffer = new int[array_size - 1];
 				memcpy(new_buffer, buffer, sizeof(int)*i);
 				memcpy(new_buffer + i, buffer + (i + 1), sizeof(int)*(array_size - (i + 1)));
@@ -71,34 +77,21 @@ bool delete_element_by_index(const unsigned& index)
 				buffer = new_buffer;
 			}
 			else {
-				found = true;
-				memcpy(buffer + i, buffer + (i + 1), sizeof(int)*(array_size - (i + 1)));
-			}
+				for (unsigned k = i; k < array_size - 1; k++) {
+					buffer[k] = buffer[k + 1];
+				}
+			}	
 			array_size = array_size - 1;
 		}
 	}
 	return found;
 }
 
-//Поиск index по element
-int find_index(unsigned element) {
-	unsigned index = -1;
-	for (unsigned i = 0; i < array_size; i++)
-	{
-		if (buffer[i] == element) {
-			index = i;
-		}
-	}
-	return index;
-}
-
 //Удаление элемента из массива. 
 //Функция возвращает true, если элемент был удален корректно, иначе - false. 
 bool delete_element(const int& element)
 {
-	bool found = false; 
-	found = delete_element_by_index(find_index(element));
-	return found;
+	return delete_element_by_index(find_index(element));
 }
 
 //Поиск элемента в массиве.
