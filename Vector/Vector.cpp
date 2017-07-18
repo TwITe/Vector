@@ -34,7 +34,7 @@ void destroy_array() {
 void create_new_buffer() {
 	capacity = array_size * 2 + 1;
 	int* new_buffer = new int[capacity];
-	memcpy(new_buffer, buffer, sizeof(buffer)*array_size);
+	memcpy(new_buffer, buffer, sizeof(int) * array_size);
 	delete[] buffer;
 	buffer = new_buffer;
 }
