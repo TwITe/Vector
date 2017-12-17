@@ -49,7 +49,7 @@ void add_element(const int& element) {
 }
 
 //Поиск index по element
-int find_index(unsigned element) {
+int find_index(int element) {
 	int index = -1;
 	for (unsigned i = 0; i < array_size; i++)
 	{
@@ -328,6 +328,5 @@ int main()
 	array_size_has_to_decrease_while_elements_were_deleted_test();
 	can_init_and_destroy_new_array_test();
 
-	system("PAUSE");
 	return 0;
 }
