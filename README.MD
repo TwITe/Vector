@@ -1,0 +1,1 @@
+It is my own realization of a dynamic array (vector) in C++
