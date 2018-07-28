@@ -1,1 +1,1 @@
-It is my own realization of a dynamic array (vector)
+Implementation of a dynamic array (vector)
